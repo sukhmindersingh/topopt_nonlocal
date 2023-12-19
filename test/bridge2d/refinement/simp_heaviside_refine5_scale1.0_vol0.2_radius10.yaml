@@ -1,0 +1,37 @@
+Parameters:
+  adapt move limit: false
+  beta: [1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0]
+  boundary displacements: [26, 11, 0.0]
+  boundary tractions: [25, 1, -1.0]
+  checkpoint frequency: 100
+  density file: test/bw_design.dat
+  eta: 0.5
+  finite element order: 1
+  global mesh refinement steps: 5
+  iterations per beta: 50
+  linear solver tolerance: 0.0001
+  material filter behavior type: 2
+  material filter kernel p: 1.0
+  material filter radius: 0.4
+  max iterations: 1000
+  mesh file name: bridge.msh
+  mesh scale: 1.0
+  mode: optimization
+  model_name: simp_heaviside
+  objective: compliance
+  optimizer: mma
+  optimizer tolerance: 0.001
+  output directory name: simp_heaviside_refine5_scale1.0_vol0.2_radius10
+  output frequency: 100
+  penalization constant: 3.0
+  penalization type: power_law
+  random perturbation scale: 0.0
+  resume: false
+  solid domain ids: [2]
+  standard filter behavior type: 1
+  standard filter radius: 10.000001
+  standard filter type: discretization_based
+  use filter matrix free: false
+  use material for initial design: true
+  volume fraction: 0.2
+  zeta: 0.0

@@ -1,0 +1,60 @@
+Parameters:
+  mode: optimization
+  # mode: postprocess
+  # mode: gradient_check
+  resume: false
+  use material for initial design: true
+  output directory name: nonlocal_test
+  density file: simp_heaviside/design.dat
+  # objective: displacement_norm
+  objective: compliance
+
+  mesh file name: cantilever.msh
+  mesh scale: 1.
+  global mesh refinement steps: 5
+  finite element order: 1
+  linear solver tolerance: 1.e-4
+
+  volume fraction: 0.4
+  # target volume: 50.
+  random perturbation scale: 0.
+
+  penalization type: power_law
+  # penalization type: ramp
+  penalization constant: 3.
+
+  # standard filter type: radius_based
+  standard filter type: discretization_based
+  standard filter radius: 1.3
+  material filter radius: 0.4
+  material filter kernel p: 1.0
+  standard filter behavior type: 1
+  material filter behavior type: 2
+  use filter matrix free: false
+  zeta: 0.
+
+  optimizer: mma
+  optimizer tolerance: 0.001
+
+  output frequency: 10
+  checkpoint frequency: 100
+
+  max iterations: 1000
+
+  beta: [1., 2., 4., 8., 16., 32., 64.]
+  iterations per beta: 50
+  adapt move limit: false
+  eta: 0.
+
+
+  # model_name: simp
+  model_name: nonlocal
+  # model_name: nonlocal_modified
+  # model_name: simp_heaviside
+  # model_name: simp_heaviside_modified
+  # model_name: nonlocal_heaviside
+
+  boundary displacements: [3, 11, 0.]
+  boundary tractions: [4, 01, -1.]
+  # boundary pressure: [11, 1.]
+  solid domain ids: [2]
