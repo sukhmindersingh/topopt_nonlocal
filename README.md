@@ -2,8 +2,6 @@
 
 This is a density-based topology optimization code based on [deal.II](https://github.com/dealii/dealii) finite element library and MMA (Method of Moving Asymptotes) optimizer from [ParOpt](https://smdogroup.github.io/paropt/) library
 
-> S. Singh, L. Pflug, F. Wein and M. Stingl: A nonlocal approach to graded surface modeling in topology optimization.
-
 ## Features
 
 - Preconditioned conjugate gradient, matrix-free solver for linear elasticity
