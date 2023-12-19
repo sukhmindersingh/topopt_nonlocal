@@ -1,4 +1,4 @@
-#include "nonlocal.hpp"
+#include "topopt.hpp"
 #include "filter.hpp"
 #include "utilities.hpp"
 #include <Teuchos_ENull.hpp>
@@ -8,7 +8,7 @@
 #include <deal.II/numerics/data_out.h>
 #include <thread>
 
-Nonlocal::Nonlocal(Teuchos::RCP<Teuchos::ParameterList> &params)
+TopOpt::TopOpt(Teuchos::RCP<Teuchos::ParameterList> &params)
     : params_(params), mpi_communicator_(MPI_COMM_WORLD),
       triangulation_(
           MPI_COMM_WORLD,
@@ -49,7 +49,7 @@ Nonlocal::Nonlocal(Teuchos::RCP<Teuchos::ParameterList> &params)
   setup_system();
 }
 
-void Nonlocal::setup_system() {
+void TopOpt::setup_system() {
 
   dealii::TimerOutput::Scope t(timer_, "setup system");
 
@@ -302,7 +302,7 @@ void Nonlocal::setup_system() {
   }
 }
 
-void Nonlocal::assemble_rhs() {
+void TopOpt::assemble_rhs() {
 
   system_rhs_ = 0.;
 
@@ -404,7 +404,7 @@ void Nonlocal::assemble_rhs() {
   system_rhs_.compress(dealii::VectorOperation::add);
 }
 
-void Nonlocal::assemble_sensitivity_vector(LA::MPI::Vector &sensitivity) {
+void TopOpt::assemble_sensitivity_vector(LA::MPI::Vector &sensitivity) {
 
   dealii::TimerOutput::Scope t(timer_, "assemble sensitivity vector");
 
@@ -462,9 +462,9 @@ void Nonlocal::assemble_sensitivity_vector(LA::MPI::Vector &sensitivity) {
   lagrange_multiplier_vector_.zero_out_ghost_values();
 }
 
-void Nonlocal::solve_matrix_free(VectorType &solution,
-                                 const LA::MPI::Vector &elastic_modulus,
-                                 const VectorType &rhs) {
+void TopOpt::solve_matrix_free(VectorType &solution,
+                               const LA::MPI::Vector &elastic_modulus,
+                               const VectorType &rhs) {
   dealii::TimerOutput::Scope t(timer_, "solve matrix free");
 
   const unsigned int nlevels = triangulation_.n_global_levels();
@@ -554,9 +554,9 @@ void Nonlocal::solve_matrix_free(VectorType &solution,
   constraints_.distribute(solution);
 }
 
-void Nonlocal::checkpoint(const std::string &filename_prefix,
-                          const LA::MPI::Vector &design,
-                          const LA::MPI::Vector &material) {
+void TopOpt::checkpoint(const std::string &filename_prefix,
+                        const LA::MPI::Vector &design,
+                        const LA::MPI::Vector &material) {
 
   dealii::TimerOutput::Scope t(timer_, "checkpoint");
 
@@ -589,7 +589,7 @@ void Nonlocal::checkpoint(const std::string &filename_prefix,
   }
 }
 
-void Nonlocal::output_results(
+void TopOpt::output_results(
     const std::string &prefix, const VectorType &solution,
     const std::map<std::string, Teuchos::RCP<LA::MPI::Vector>> &density_vectors,
     const unsigned int cycle) {
@@ -636,8 +636,8 @@ void Nonlocal::output_results(
 }
 
 //! Get the variables/bounds
-void Nonlocal::getVarsAndBounds(ParOptVec *xvec, ParOptVec *lbvec,
-                                ParOptVec *ubvec) {
+void TopOpt::getVarsAndBounds(ParOptVec *xvec, ParOptVec *lbvec,
+                              ParOptVec *ubvec) {
   ParOptScalar *x, *lb, *ub;
   xvec->getArray(&x);
   lbvec->getArray(&lb);
@@ -655,12 +655,12 @@ void Nonlocal::getVarsAndBounds(ParOptVec *xvec, ParOptVec *lbvec,
   }
 }
 
-ParOptQuasiDefMat *Nonlocal::createQuasiDefMat() {
+ParOptQuasiDefMat *TopOpt::createQuasiDefMat() {
   int nwblock = 0;
   return new ParOptQuasiDefBlockMat(this, nwblock);
 }
 
-void Nonlocal::write_current_visualization() {
+void TopOpt::write_current_visualization() {
   std::map<std::string, Teuchos::RCP<LA::MPI::Vector>> density_vectors;
 
   nonlocal_model_->set_design(design_);
@@ -677,8 +677,8 @@ void Nonlocal::write_current_visualization() {
                  optimization_iteration_);
 }
 
-int Nonlocal::evalObjCon(ParOptVec *xvec, ParOptScalar *fobj,
-                         ParOptScalar *cons) {
+int TopOpt::evalObjCon(ParOptVec *xvec, ParOptScalar *fobj,
+                       ParOptScalar *cons) {
 
   dealii::TimerOutput::Scope t(timer_, "eval obj/con");
 
@@ -712,7 +712,7 @@ int Nonlocal::evalObjCon(ParOptVec *xvec, ParOptScalar *fobj,
   return 0;
 }
 
-void Nonlocal::write_statistics() {
+void TopOpt::write_statistics() {
 
   dealii::TimerOutput::Scope t(timer_, "write_statistics");
 
@@ -786,8 +786,8 @@ void Nonlocal::write_statistics() {
   }
 }
 
-int Nonlocal::evalObjConGradient(ParOptVec *xvec, ParOptVec *gvec,
-                                 ParOptVec **Ac) {
+int TopOpt::evalObjConGradient(ParOptVec *xvec, ParOptVec *gvec,
+                               ParOptVec **Ac) {
   dealii::TimerOutput::Scope t(timer_, "eval obj/con grad");
   ++optimization_iteration_;
 
@@ -835,7 +835,7 @@ int Nonlocal::evalObjConGradient(ParOptVec *xvec, ParOptVec *gvec,
   return 0;
 }
 
-void Nonlocal::optimize_paropt(const unsigned int max_iters) {
+void TopOpt::optimize_paropt(const unsigned int max_iters) {
 
   setProblemSizes(density_dof_handler_.n_locally_owned_dofs(), 1, 0);
 
@@ -865,7 +865,7 @@ void Nonlocal::optimize_paropt(const unsigned int max_iters) {
   opt->decref();
 }
 
-void Nonlocal::check_gradients() {
+void TopOpt::check_gradients() {
   write_results_ = false;
   set_objective_scale_ = false;
 
@@ -880,8 +880,7 @@ void Nonlocal::check_gradients() {
   }
 }
 
-void Nonlocal::scale_design_to_satisfy_constraint(
-    LA::MPI::Vector &design) const {
+void TopOpt::scale_design_to_satisfy_constraint(LA::MPI::Vector &design) const {
 
   double l1 = 0.;
   double l2 = 1.;
@@ -908,7 +907,7 @@ void Nonlocal::scale_design_to_satisfy_constraint(
   design = x_new;
 }
 
-void Nonlocal::optimize() {
+void TopOpt::optimize() {
 
   solution_ = 0.;
 
@@ -937,7 +936,7 @@ void Nonlocal::optimize() {
              *nonlocal_model_->get_material());
 }
 
-void Nonlocal::postprocess(const LA::MPI::Vector &gray_material) {
+void TopOpt::postprocess(const LA::MPI::Vector &gray_material) {
 
   LA::MPI::Vector material(gray_material);
   material = gray_material;
@@ -969,7 +968,7 @@ void Nonlocal::postprocess(const LA::MPI::Vector &gray_material) {
   checkpoint("bw_design", material, material);
 }
 
-void Nonlocal::run() {
+void TopOpt::run() {
 
   {
     const unsigned int n_vect_doubles = dealii::VectorizedArray<double>::size();

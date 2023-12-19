@@ -6,7 +6,7 @@
 
 #include "Teuchos_StandardCatchMacros.hpp"
 
-#include "nonlocal.hpp"
+#include "topopt.hpp"
 
 int main(int argc, char **argv) {
 
@@ -32,8 +32,8 @@ int main(int argc, char **argv) {
           std::filesystem::copy_options::overwrite_existing);
     }
 
-    Nonlocal nonlocal_problem(params);
-    nonlocal_problem.run();
+    TopOpt problem(params);
+    problem.run();
   }
 
   TEUCHOS_STANDARD_CATCH_STATEMENTS(true, std::cerr, success);

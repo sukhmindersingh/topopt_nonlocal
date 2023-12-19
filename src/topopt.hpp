@@ -216,10 +216,10 @@ private:
   Stress stress_;
 };
 
-class Nonlocal : public ParOptProblem {
+class TopOpt : public ParOptProblem {
 
 public:
-  Nonlocal(Teuchos::RCP<Teuchos::ParameterList> &params);
+  TopOpt(Teuchos::RCP<Teuchos::ParameterList> &params);
   void setup_system();
   void assemble_sensitivity_vector(LA::MPI::Vector &sensitivity);
   void assemble_rhs();
