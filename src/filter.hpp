@@ -146,8 +146,7 @@ public:
     const auto standard_filter_behavior_type =
         params_->get<int>("standard filter behavior type", 1);
 
-    Kernel material_filter_kernel(
-        params_->get<double>("material filter kernel p", 1.));
+    Kernel material_filter_kernel(1.);
 
     if (!params_->get<bool>("use filter matrix free", true)) {
       filter_matrix_ = Teuchos::rcp(new FilterMatrix);
