@@ -1,9 +1,9 @@
-set(TARGET "fracopt")
+set(TARGET "topopt")
 
 set(SOURCES
-  main.cpp
-  nonlocal.cpp
-  utilities.cpp
+  src/utilities.cpp
+  src/topopt.cpp
+  src/main.cpp
   )
 
 set(TARGET_SRC ${SOURCES})
@@ -42,12 +42,6 @@ if(NOT ${deal.II_FOUND})
       "You may want to either pass a flag -DDEAL_II_DIR=/path/to/deal.II to cmake\n"
       "or set an environment variable \"DEAL_II_DIR\" that contains this path.")
 endif()
-
-
-
-include_directories($ENV{IPOPT_DIR}/include/coin-or)
-link_directories($ENV{IPOPT_DIR}/lib)
-set(IPOPT_INCLUDE_DIRS $ENV{IPOPT_DIR}/include/coin-or)
 
 deal_ii_initialize_cached_variables()
 project(${TARGET})
