@@ -12,15 +12,15 @@ S. Singh, L. Pflug, F. Wein and M. Stingl, A nonlocal approach to graded surface
 
 ## How to run:
 
-- Install deal.II library using SPACK
+- Install [deal.II](https://github.com/dealii/dealii) finite-element library using [SPACK](https://github.com/spack/spack)
 
 ```bash
 spack install dealii@9.5.1+optflags
 ```
 
-- Install [ParOpt](https://smdogroup.github.io/paropt/) library
+- Install [ParOpt](https://smdogroup.github.io/paropt/) library for MMA (Method of Moving Asymptotes) solver
 
-- Compile the code
+- Compile the code, use `-DPLANAR=1` for two-dimensional problems
 
 ```bash
 mkdir build
